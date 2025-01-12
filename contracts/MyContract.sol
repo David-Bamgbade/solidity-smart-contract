@@ -2,19 +2,23 @@
 pragma solidity ^0.8.10;
 
 contract MyContract {
-    string public storedData;
+    address public owner;
+    uint public balance;
 
-    constructor(string memory _initialData){
-        storedData = _initialData;
+
+    constructor(){
+        owner = msg.sender;
     }
 
-    function setStoredData (string memory _newData) {
-    storedData = _newData;
+    function depositEther() external payable {
+        balance += msg.value;
     }
 
-    function getStoredData () public view returns (string memory) {
-        return storedData;
+    function withdrawEther (uint amount) external {
+        require(amount <= balance, "Only Owner Can Call This Function" );
+        require(amount <= balance, "Amount Exceeds Balance");
+        balance -amount;
+        payable(owner).transfer(amount);
     }
-
 
 }
